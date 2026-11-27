@@ -1,0 +1,20 @@
+{% extends "base.html" %}{% block content %}
+<div class="row" style="justify-content:space-between;align-items:center"><h2>Uploaded Products ({{ products|length }})</h2>
+<a class="btn" href="{{ url_for('product_form') }}">+ Upload new product</a></div><br>
+<div class="plist">{% for p in products %}
+<div class="prow">
+  {% if p.image %}<img src="{{ url_for('static', filename='uploads/' + p.image) }}" alt="{{ p.name }}">{% else %}<div class="noimg">No image</div>{% endif %}
+  <div class="pinfo">
+    <h3>{{ p.name }} <small>#{{ p.id }}</small></h3>
+    <p>{{ p.description or 'No description.' }}</p>
+    <div class="meta">
+      <div><span>Price</span><b>KES {{ '%.2f'|format(p.price) }}</b></div>
+      <div><span>Stock</span><b>{{ p.stock }}</b></div>
+      <div><span>Status</span><b>{% if p.stock == 0 %}<span class="badge rejected">Out of stock</span>{% elif p.stock <= LOW %}<span class="badge pending">Low stock</span>{% else %}In stock{% endif %}</b></div>
+      <div><span>Uploaded</span><b>{{ p.created_at.strftime('%d %b %Y %H:%M') if p.created_at else '' }}</b></div>
+    </div>
+    <div class="row"><a class="btn sm" href="{{ url_for('product_form', pid=p.id) }}">Edit</a>
+    <a class="btn sm grey" href="{{ url_for('product', pid=p.id) }}" target="_blank">View in shop</a>
+    <form method="post" action="{{ url_for('product_delete', pid=p.id) }}" data-confirm="Delete this product?"><button class="btn sm red">Delete</button></form></div>
+  </div>
+</div>{% else %}<div class="box">Nothing uploaded yet.</div>{% endfor %}</div>{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% block content %}<h2>Order #{{ o.id }} <span class="badge {{ o.status }}">{{ o.status.replace('_',' ') }}</span></h2>
+<div class="box">Customer: <b>{{ o.uname }}</b> ({{ o.email }})<br>Phone: {{ o.phone }}<br>Address: {{ o.address }}</div>
+{% include "items.html" %}
+{% if o.status == 'pending' %}
+<form method="post" action="{{ url_for('order_action', oid=o.id, action='approve') }}" class="box"><h3>Approve &amp; upload payment details</h3>
+<textarea name="instructions" rows="4" required placeholder="e.g. M-Pesa Paybill 247247, Account: ORDER{{ o.id }}&#10;or Till Number 123456 (Shop Name)"></textarea><button class="btn">Approve order</button></form>
+<form method="post" action="{{ url_for('order_action', oid=o.id, action='reject') }}" class="box"><input name="note" placeholder="Reason (optional)"><button class="btn red">Reject order</button></form>{% endif %}
+{% if o.status in ('approved','payment_rejected') %}<div class="box pay"><b>Payment details given:</b>
+{{ o.pay_instructions }}</div><p>Waiting for the customer to send the M-Pesa code.</p>{% endif %}
+{% if o.status == 'payment_submitted' %}<div class="box pay"><b>Code from customer:</b> <span style="font-size:1.3rem">{{ o.mpesa_code }}</span>
+<button class="btn sm grey" data-copy="{{ o.mpesa_code }}">Copy</button><br>Check it against your M-Pesa statement/SMS for KES {{ '%.2f'|format(o.total) }}.</div>
+<div class="row"><form method="post" action="{{ url_for('order_action', oid=o.id, action='confirm') }}"><button class="btn">✔ Confirm payment</button></form>
+<form method="post" action="{{ url_for('order_action', oid=o.id, action='badpay') }}" class="row"><input name="note" placeholder="Reason" style="margin:0"><button class="btn red">Reject payment</button></form></div>{% endif %}
+{% if o.status == 'paid' %}<div class="box">✅ Paid. Code: {{ o.mpesa_code }}</div>{% endif %}
+<br><a href="{{ url_for('admin_orders') }}">← Back to orders</a>{% endblock %}

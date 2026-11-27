@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block content %}<h2>Admin Dashboard</h2>
+<div class="row"><a class="btn" href="{{ url_for('admin_products') }}">Products</a><a class="btn" href="{{ url_for('admin_orders') }}">All Orders</a></div><br>
+<div class="stats"><div class="card"><b>{{ np }}</b>Products</div><div class="card"><b>{{ nu }}</b>Customers</div>
+<div class="card"><b>{{ st.get('pending',0) }}</b><a href="{{ url_for('admin_orders', status='pending') }}">Pending approval</a></div>
+<div class="card"><b>{{ st.get('payment_submitted',0) }}</b><a href="{{ url_for('admin_orders', status='payment_submitted') }}">Payments to confirm</a></div>
+<div class="card"><b>KES {{ '%.0f'|format(rev) }}</b>Confirmed revenue</div></div><h3 style="margin-top:22px">💡 Advice for the owner</h3>
+{% for lvl, title, text in advice %}<div class="adv {{ lvl }}"><b>{{ title }}</b><span>{{ text }}</span></div>{% endfor %}
+{% if low %}<h3>Low &amp; out-of-stock products</h3><div class="scroll"><table><tr><th>Product</th><th>Stock</th><th>Sold (30 days)</th><th>Lasts about</th><th>Suggested restock</th><th></th></tr>
+{% for x in low %}<tr><td>{{ x.p.name }}</td><td><span class="badge {{ 'rejected' if x.out else 'pending' }}">{{ x.p.stock }}</span></td><td>{{ x.sold }}</td>
+<td>{{ (x.days ~ ' days') if x.days is not none else '-' }}</td><td><b>+{{ x.restock }}</b></td><td><a class="btn sm" href="{{ url_for('product_form', pid=x.p.id) }}">Update stock</a></td></tr>{% endfor %}</table></div>{% endif %}
+<h3 style="margin-top:26px">Latest uploads</h3>
+<div class="grid">{% for p in recent %}<div class="card">{% if p.image %}<img src="{{ url_for('static', filename='uploads/' + p.image) }}">{% else %}<img alt="">{% endif %}
+<h3>{{ p.name }}</h3><p>{{ p.description[:80] if p.description }}</p><p class="price">KES {{ '%.2f'|format(p.price) }} · Stock {{ p.stock }}</p></div>{% else %}<p>No products uploaded yet.</p>{% endfor %}</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block content %}<h2>Order #{{ o.id }} <span class="badge {{ o.status }}">{{ o.status.replace('_',' ') }}</span></h2>
+{% include "items.html" %}
+{% if o.status == 'pending' %}<div class="box">⏳ Waiting for admin approval. Payment details will appear here once approved.</div>{% endif %}
+{% if o.status == 'rejected' %}<div class="box">❌ Order rejected. {{ o.admin_note }}</div>{% endif %}
+{% if o.status in ('approved','payment_rejected') %}
+<div class="box pay"><b>Pay KES {{ '%.2f'|format(o.total) }} using:</b>
+{{ o.pay_instructions }}</div>
+{% if o.status == 'payment_rejected' %}<div class="flash error">Previous payment rejected: {{ o.admin_note }}</div>{% endif %}
+<form method="post" action="{{ url_for('submit_payment', oid=o.id) }}" class="box"><h3>Sent the money? Enter the M-Pesa code</h3>
+<input name="code" placeholder="e.g. SJK3L9XYZ1" required maxlength="20"><button class="btn">Submit code</button></form>{% endif %}
+{% if o.status == 'payment_submitted' %}<div class="box">Code <b>{{ o.mpesa_code }}</b> sent. Admin is confirming your payment.</div>{% endif %}
+{% if o.status == 'paid' %}<div class="box">✅ Payment confirmed. Thank you! Code: {{ o.mpesa_code }}</div>{% endif %}{% endblock %}

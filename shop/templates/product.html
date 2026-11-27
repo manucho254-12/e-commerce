@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% block content %}<div class="box grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+{% if p.image %}<img class="pimg" src="{{ url_for('static', filename='uploads/' + p.image) }}">{% else %}<div class="pimg"></div>{% endif %}
+<div><h2>{{ p.name }}</h2><p class="price">KES {{ '%.2f'|format(p.price) }}</p><p>{{ p.description }}</p><p>In stock: {{ p.stock }}</p>
+{% if p.stock > 0 %}<form method="post" action="{{ url_for('cart_add', pid=p.id) }}"><input type="number" name="qty" value="1" min="1" max="{{ p.stock }}" style="width:90px"><button class="btn">Add to cart</button></form>{% endif %}</div></div>{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block content %}<h2>Your Cart</h2>
+{% if items %}<div class="scroll"><table><tr><th>Product</th><th>Price</th><th>Qty</th><th>Subtotal</th></tr>
+{% for i in items %}<tr><td>{{ i.p.name }}</td><td>{{ '%.2f'|format(i.p.price) }}</td>
+<td><form method="post" action="{{ url_for('cart_update', pid=i.p.id) }}" class="row"><input type="number" name="qty" value="{{ i.qty }}" min="0" max="{{ i.p.stock }}" style="width:70px;margin:0"><button class="btn sm grey">Update</button></form></td>
+<td>{{ '%.2f'|format(i.sub) }}</td></tr>{% endfor %}<tr><th colspan="3">Total</th><th>KES {{ '%.2f'|format(total) }}</th></tr></table></div>
+{% if session.uid %}<form method="post" action="{{ url_for('checkout') }}" class="box" style="margin-top:16px"><h3>Delivery details</h3>
+<label>Phone</label><input name="phone" required placeholder="07XXXXXXXX"><label>Address</label><textarea name="address" required></textarea><button class="btn">Place order</button></form>
+{% else %}<p><a href="{{ url_for('login') }}">Log in</a> to place your order.</p>{% endif %}
+{% else %}<p>Your cart is empty.</p>{% endif %}{% endblock %}

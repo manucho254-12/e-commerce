@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block content %}<form method="post" enctype="multipart/form-data" class="box narrow"><h2>{{ 'Edit' if p else 'New' }} product</h2>
+<input name="name" placeholder="Name" value="{{ p.name if p }}" required><textarea name="description" placeholder="Description">{{ p.description if p }}</textarea>
+<input type="number" step="0.01" name="price" placeholder="Price (KES)" value="{{ p.price if p }}" required>
+<input type="number" name="stock" placeholder="Stock" value="{{ p.stock if p else 1 }}" required>
+<input type="file" name="image" id="imgInput" accept="image/*"><img id="preview" style="display:none;max-width:100%;margin-bottom:10px">
+<button class="btn">Save</button></form>{% endblock %}

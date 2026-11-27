@@ -1,0 +1,8 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}My Shop{% endblock %}</title><link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"></head><body>
+<nav><a class="brand" href="{{ url_for('index') }}">🛒 My Shop</a>
+<a href="{{ url_for('index') }}">Home</a><a href="{{ url_for('shop') }}">Shop</a><a href="{{ url_for('cart') }}">Cart ({{ cart_count }})</a>
+{% if session.uid %}{% if session.admin %}<a href="{{ url_for('admin_home') }}">Admin</a>{% else %}<a href="{{ url_for('my_orders') }}">My Orders</a>{% endif %}
+<a href="{{ url_for('logout') }}">Logout ({{ session.name }})</a>{% else %}<a href="{{ url_for('login') }}">Login</a><a href="{{ url_for('register') }}">Register</a>{% endif %}</nav>
+<div class="wrap">{% for c, m in get_flashed_messages(with_categories=true) %}<div class="flash {{ c }}">{{ m }}</div>{% endfor %}
+{% block content %}{% endblock %}</div><script src="{{ url_for('static', filename='js/main.js') }}"></script></body></html>

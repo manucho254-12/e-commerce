@@ -1,0 +1,38 @@
+{% extends "base.html" %}{% block content %}
+<section class="hero">
+  <span class="blob b1"></span><span class="blob b2"></span>
+  <div class="hero-in">
+    <h1>Shop Smart.<br>Pay Easy with M-Pesa.</h1>
+    <p>Quality products, simple ordering and secure payment confirmation — delivered to your door.</p>
+    <div class="row" style="justify-content:center">
+      <a class="btn big" href="{{ url_for('shop') }}">Shop Now →</a>
+      {% if not session.uid %}<a class="btn big ghost" href="{{ url_for('register') }}">Create Account</a>{% endif %}
+    </div>
+  </div>
+</section>
+
+<section class="sec"><h2>Why shop with us</h2>
+<div class="grid feats">
+  <div class="card"><div class="ico">🛍️</div><h3>Wide Selection</h3><p>Fresh products added by our team regularly.</p></div>
+  <div class="card"><div class="ico">✅</div><h3>Verified Orders</h3><p>Every order is reviewed and approved by an admin.</p></div>
+  <div class="card"><div class="ico">📲</div><h3>M-Pesa Payments</h3><p>Pay with the details we give you and send your code.</p></div>
+  <div class="card"><div class="ico">🚚</div><h3>Fast Delivery</h3><p>Orders are processed as soon as payment is confirmed.</p></div>
+</div></section>
+
+<section class="sec"><h2>Featured Products</h2>
+<div class="grid">{% for p in featured %}<div class="card">
+<a href="{{ url_for('product', pid=p.id) }}">{% if p.image %}<img src="{{ url_for('static', filename='uploads/' + p.image) }}">{% else %}<img alt="">{% endif %}<h3>{{ p.name }}</h3></a>
+<p class="price">KES {{ '%.2f'|format(p.price) }}</p>
+<form method="post" action="{{ url_for('cart_add', pid=p.id) }}"><button class="btn sm">Add to cart</button></form>
+</div>{% else %}<p>Products coming soon.</p>{% endfor %}</div>
+<p style="text-align:center;margin-top:18px"><a class="btn" href="{{ url_for('shop') }}">View all products</a></p></section>
+
+<section class="sec"><h2>How it works</h2>
+<div class="steps">
+  <div><b>1</b>Pick your items</div><div><b>2</b>Place your order</div>
+  <div><b>3</b>Get approval &amp; payment details</div><div><b>4</b>Pay &amp; send the M-Pesa code</div>
+</div></section>
+
+<section class="cta"><h2>Ready to order?</h2><a class="btn big" href="{{ url_for('shop') }}">Start Shopping</a></section>
+<footer class="foot">© My Shop · Powered by M-Pesa · All rights reserved</footer>
+{% endblock %}

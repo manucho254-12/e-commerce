@@ -1,0 +1,3 @@
+<div class="scroll"><table><tr><th>Item</th><th>Price</th><th>Qty</th><th>Subtotal</th></tr>
+{% for i in items %}<tr><td>{{ i.name }}</td><td>{{ '%.2f'|format(i.price) }}</td><td>{{ i.qty }}</td><td>{{ '%.2f'|format(i.price*i.qty) }}</td></tr>{% endfor %}
+<tr><th colspan="3">Total</th><th>KES {{ '%.2f'|format(o.total) }}</th></tr></table></div><br>
